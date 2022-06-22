@@ -40,6 +40,7 @@ public class StepDefinition extends BaseClass {
 	@Then("user closes the browser")
 	public void user_closes_the_browser() {
 	   quit();
+	  
 	}
 
 }

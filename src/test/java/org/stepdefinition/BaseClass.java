@@ -7,9 +7,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -24,6 +27,8 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -40,6 +45,27 @@ public class BaseClass {
 	public static void launchBrowser() {
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
+	}
+	
+	public static void launchBrowser(String browser) {
+		//RemoteWebDriver driver=null;
+		switch (browser) {
+		case "chrome":
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+			break;
+		case "firefox":
+			WebDriverManager.firefoxdriver().setup();
+			driver = new FirefoxDriver();
+		break;
+		case "edge":
+			WebDriverManager.edgedriver().setup();
+			driver = new EdgeDriver();
+			break;
+		default:
+			System.err.println("undefined browser entered.");
+			break;
+		}
 	}
 
 	public static void launchUrl(String siteUrl) {
@@ -74,6 +100,9 @@ public class BaseClass {
 	public static WebElement myId(String id) {
 		return driver.findElement(By.id(id));
 
+	}
+	public static WebElement myId1(String s) {
+		return driver.findElement(By.id(s));
 	}
 
 	public static WebElement myCss(String cssSelector) {
@@ -135,6 +164,11 @@ public class BaseClass {
 		driver.navigate().refresh();
 
 	}
+	
+	public static void jclick(WebElement elementName) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].click()", elementName);
+	}
 
 	public static void alertAccept() {
 		impWait();
@@ -157,6 +191,13 @@ public class BaseClass {
 
 	public static Set<String> windowHandles() {
 		return driver.getWindowHandles();
+	}
+	
+	public static WebDriver switchToWindow(int i) {
+		Set<String> allWin = driver.getWindowHandles();
+		List<String> li=new ArrayList<String>();
+		li.addAll(allWin);
+		return driver.switchTo().window(li.get(i));
 	}
 
 	public static void goDown(WebElement elementName) {
